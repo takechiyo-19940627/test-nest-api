@@ -5,6 +5,7 @@ import { UsersService } from './users/users.service';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/users.entity';
 
 @Module({
   imports: [
@@ -14,8 +15,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: 3306,
       username: 'root',
       password: 'password',
-      database: 'test-nest-api',
-      entities: [],
+      database: 'test_nest_api',
+      entities: [User],
       synchronize: true,
     }),
     UsersModule,
