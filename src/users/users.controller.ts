@@ -6,7 +6,8 @@ import {
   Body,
   HttpException,
 } from '@nestjs/common';
-import { CreateUserDTO } from './users.dto';
+import { CreateUserDTO, LoginUserDTO } from './users.dto';
+import { User } from './users.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -37,5 +38,34 @@ export class UsersController {
       );
     }
     return;
+  }
+
+  @Post('login')
+  async login(@Body() loginUserDTO: LoginUserDTO): Promise<User> {
+    let user: User;
+    try {
+      user = await this.usersService.loginUser(
+        loginUserDTO.screenName,
+        loginUserDTO.password,
+      );
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Internal Server Error',
+        },
+        500,
+      );
+    }
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'User Not Found',
+        },
+        404,
+      );
+    }
+    return user;
   }
 }
